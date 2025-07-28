@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>React Site Scraper</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; background: #f2f2f2; }
+    input, button { padding: 0.5rem; font-size: 1rem; margin-right: 1rem; }
+  </style>
+</head>
+<body>
+  <h1>React Site Scraper</h1>
+  <form id="scrapeForm">
+    <input type="url" id="siteUrl" placeholder="Enter React site URL" required>
+    <button type="submit">Scrape & Download</button>
+  </form>
+  <p id="status"></p>
+
+  <script>
+    document.getElementById('scrapeForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const url = document.getElementById('siteUrl').value;
+      document.getElementById('status').textContent = 'Scraping...';
+      const response = await fetch('/scrape', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url })
+      });
+      const blob = await response.blob();
+      const a = document.createElement('a');
+      a.href = window.URL.createObjectURL(blob);
+      a.download = 'react-site.zip';
+      a.click();
+      document.getElementById('status').textContent = 'Done!';
+    });
+  </script>
+</body>
+</html>
